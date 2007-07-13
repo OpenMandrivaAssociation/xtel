@@ -10,7 +10,6 @@ License: GPL
 Group: Networking/Other
 Buildrequires: XFree86-devel jpeg-devel XFree86
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
-PreReq: chkfontpath
 URL: http://pficheux.free.fr/xtel/
 Requires: xinetd
 
@@ -93,6 +92,10 @@ mkdir -p $RPM_BUILD_ROOT/usr/X11R6/lib/X11/app-defaults
 cp -Rf $RPM_BUILD_ROOT/usr/X11R6/lib/X11/app-defaults.bak/* $RPM_BUILD_ROOT/usr/X11R6/lib/X11/app-defaults
 rm -f $RPM_BUILD_ROOT/usr/X11R6/lib/X11/app-defaults.bak
 
+mkdir -p %{buildroot}%_sysconfdir/X11/fontpath.d/
+ln -s ../../../usr/X11R6/lib/X11/fonts/xtel \
+    %{buildroot}%_sysconfdir/X11/fontpath.d/ttf-essays:pri=50
+
 %clean
 rm -fr $RPM_BUILD_ROOT
 
@@ -106,21 +109,10 @@ if [ "`grep xtel /etc/services`" = "" ]; then
 fi
 
 service xinetd restart
-
-chkfontpath --list | grep /usr/X11R6/lib/X11/fonts/xtel > /dev/null 2>&1
-
-if [ $? != 0 ]; then
-   chkfontpath --add /usr/X11R6/lib/X11/fonts/xtel
-fi
-
 %{update_menus}
  
 %postun
 service xinetd restart
-
-if [ "$1" = "0" ]; then 
-  chkfontpath --remove /usr/X11R6/lib/X11/fonts/xtel
-fi
 %{clean_menus}  
 
 
@@ -153,6 +145,7 @@ fi
 /usr/X11R6/lib/X11/fonts/xtel/xteldigit.pcf.gz
 /usr/X11R6/lib/X11/fonts/xtel/fonts.dir
 /usr/X11R6/lib/X11/fonts/xtel/fonts.scale
+%{_sysconfdir}/X11/fontpath.d/xtel:pri=50
 
 %dir /usr/X11R6/lib/X11/fonts/xtel
 
