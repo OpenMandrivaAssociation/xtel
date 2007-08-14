@@ -1,6 +1,6 @@
 %define name	xtel
 %define version	3.3.0
-%define release	%mkrel 9
+%define release	%mkrel 10
 
 Summary: Emulateur Minitel
 Name: %{name}
@@ -110,7 +110,7 @@ cp -Rf $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults.bak/* $RPM_BUILD_ROOT%{_libdir
 rm -f $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults.bak
 
 mkdir -p %{buildroot}%_sysconfdir/X11/fontpath.d/
-ln -s ../../..%{_libdir}/X11fonts/xtel \
+ln -s ../../..%{_libdir}/X11/fonts/xtel \
     %{buildroot}%_sysconfdir/X11/fontpath.d/xtel:pri=50
 
 %clean
