@@ -20,6 +20,7 @@ Buildrequires: jpeg-devel
 Buildrequires: gccmakedep
 BuildRequires: imake
 BuildRequires: lesstif-devel
+BuildRequires: x11-data-bitmaps
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
 URL: http://pficheux.free.fr/xtel/
 Requires: xinetd
