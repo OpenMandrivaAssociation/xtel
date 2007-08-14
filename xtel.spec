@@ -104,13 +104,13 @@ Categories=Motif;System;TerminalEmulator;
 EOF
 
 # fix symlinks
-mv $RPM_BUILD_ROOT/usr/lib/X11/app-defaults $RPM_BUILD_ROOT/usr/lib/X11/app-defaults.bak
-mkdir -p $RPM_BUILD_ROOT/usr/lib/X11/app-defaults
-cp -Rf $RPM_BUILD_ROOT/usr/lib/X11/app-defaults.bak/* $RPM_BUILD_ROOT/usr/lib/X11/app-defaults
-rm -f $RPM_BUILD_ROOT/usr/lib/X11/app-defaults.bak
+mv $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults.bak
+mkdir -p $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults
+cp -Rf $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults.bak/* $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults
+rm -f $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults.bak
 
 mkdir -p %{buildroot}%_sysconfdir/X11/fontpath.d/
-ln -s ../../../usr/lib/X11/fonts/xtel \
+ln -s ../../..%{_libdir}/X11fonts/xtel \
     %{buildroot}%_sysconfdir/X11/fontpath.d/xtel:pri=50
 
 %clean
