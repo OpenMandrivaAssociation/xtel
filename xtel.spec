@@ -1,14 +1,25 @@
-Summary: Emulateur Minitel X11
-Name: xtel
-Version: 3.3.0
-Release: 8mdk
+%define name	xtel
+%define version	3.3.0
+%define release	%mkrel 9
+
+Summary: Emulateur Minitel
+Name: %{name}
+Version: %{version}
+Release: %{release}
 Source0: http://pficheux.free.fr/xtel/download/xtel-%{version}.tar.bz2
 Source1: %{name}-fr-doc.tar.bz2
 # FHS compliant XTEL
-Patch0: xtel-mdk.patch.bz2
-License: GPL
+Patch0: xtel-mdk.patch
+Patch1: xtel-3.3.0-debian_symlink_security.patch
+Patch2: xtel-3.3.0-debian_a2ps.patch
+Patch3: xtel-3.3.0-debian_motif.patch
+License: GPLv2+
 Group: Networking/Other
-Buildrequires: XFree86-devel jpeg-devel XFree86
+Buildrequires: XFree86-devel 
+Buildrequires: jpeg-devel
+Buildrequires: gccmakedep
+BuildRequires: imake
+BuildRequires: lesstif-devel
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
 URL: http://pficheux.free.fr/xtel/
 Requires: xinetd
@@ -20,27 +31,25 @@ gérer les connexions Télétel (par modem) demandées par les clients via
 TCP/IP. Xtel émule le Minitel 1B, 2 et TVR. Xteld permet également d'utiliser
 HyperTerminal Private Edition (3.0 ou 4.0) comme client Minitel Windows95/NT.
 
-
 %prep
-rm -rf $RPM_BUILD_ROOT
-
 %setup -q -a1
-%patch0 -p1 -z .fhs
+%patch0 -p1 -b .fhs
+%patch1 -p1 -b .symlink
+%patch2 -p1 -b .a2ps
+%patch3 -p1 -b .motif
 %build
 perl -pi -e 's|(#define.*DEBUG_XTELD.*)|/* $1 */|' Config.tmpl
 # do not leak information in the config file
-imake -DREDHAT  -DUseInstalled -I/usr/X11R6/lib/X11/config
+imake -DREDHAT  -DUseInstalled -I/usr/share/X11/config
 
 make Xtel
 
 %install
-rm -rf  $RPM_BUILD_ROOT
-
-
+rm -rf $RPM_BUILD_ROOT
 %makeinstall_std
 make install.man DESTDIR=$RPM_BUILD_ROOT
 
-chmod 755 $RPM_BUILD_ROOT/usr/X11R6/bin/mdmdetect
+chmod 755 $RPM_BUILD_ROOT%{_bindir}/mdmdetect
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d/
 
 cat <<EOF > $RPM_BUILD_ROOT%{_sysconfdir}/xinetd.d/xtel
@@ -55,7 +64,7 @@ service xtel
     wait                = no
     user                = root
 	group				= nogroup
-    server              = /usr/X11R6/bin/xteld
+    server              = %{_bindir}/xteld
 }
 
 EOF
@@ -71,34 +80,38 @@ service xtelw
     wait                = no
     user                = root
 	group				= nogroup
-    server              = /usr/X11R6/bin/xteld
+    server              = %{_bindir}/xteld
 }
 
 EOF
 
-mkdir -p $RPM_BUILD_ROOT%{_menudir}
-cat > $RPM_BUILD_ROOT%{_menudir}/%{name} <<EOF
-?package(%{name}):\
-command="/usr/X11R6/bin/xtel"\
-title="Xtel"\
-longtitle="Minitel emulation"\
-needs="x11"\
-section="Networking/Other"
+mkdir -p %{buildroot}%{_datadir}/applications
+cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop <<EOF
+[Desktop Entry]
+Encoding=UTF-8
+Name=Xtel
+Comment=Minitel emulation
+Exec=%{_bindir}/%{name} 
+Icon=terminals_section.png
+Terminal=false
+Type=Application
+StartupNotify=true
+MimeType=foo/bar;foo2/bar2;
+Categories=Motif;System;TerminalEmulator;
 EOF
 
 # fix symlinks
-mv $RPM_BUILD_ROOT/usr/X11R6/lib/X11/app-defaults $RPM_BUILD_ROOT/usr/X11R6/lib/X11/app-defaults.bak
-mkdir -p $RPM_BUILD_ROOT/usr/X11R6/lib/X11/app-defaults
-cp -Rf $RPM_BUILD_ROOT/usr/X11R6/lib/X11/app-defaults.bak/* $RPM_BUILD_ROOT/usr/X11R6/lib/X11/app-defaults
-rm -f $RPM_BUILD_ROOT/usr/X11R6/lib/X11/app-defaults.bak
+mv $RPM_BUILD_ROOT/usr/lib/X11/app-defaults $RPM_BUILD_ROOT/usr/lib/X11/app-defaults.bak
+mkdir -p $RPM_BUILD_ROOT/usr/lib/X11/app-defaults
+cp -Rf $RPM_BUILD_ROOT/usr/lib/X11/app-defaults.bak/* $RPM_BUILD_ROOT/usr/lib/X11/app-defaults
+rm -f $RPM_BUILD_ROOT/usr/lib/X11/app-defaults.bak
 
 mkdir -p %{buildroot}%_sysconfdir/X11/fontpath.d/
-ln -s ../../../usr/X11R6/lib/X11/fonts/xtel \
-    %{buildroot}%_sysconfdir/X11/fontpath.d/ttf-essays:pri=50
+ln -s ../../../usr/lib/X11/fonts/xtel \
+    %{buildroot}%_sysconfdir/X11/fontpath.d/xtel:pri=50
 
 %clean
 rm -fr $RPM_BUILD_ROOT
-
 
 %post
 if [ "`grep xtel /etc/services`" = "" ]; then
@@ -115,54 +128,25 @@ service xinetd restart
 service xinetd restart
 %{clean_menus}  
 
-
 %files
 %defattr(-,root,root)
-%doc COPYING LISEZMOI.txt FAQ.txt HISTOIRE.txt
+%doc LISEZMOI.txt FAQ.txt HISTOIRE.txt
 %doc xtel-fr-doc/*
-/usr/X11R6/bin/*
-/usr/X11R6/lib/X11/app-defaults/XTel
-/usr/X11R6/lib/X11/app-defaults/XTel-msg
-/usr/X11R6/lib/X11/fonts/xtel/fonts.alias
-/usr/X11R6/lib/X11/fonts/xtel/g08x10.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g08x20.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g016x10.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g016x20.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g032x20.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g016x40.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g032x40.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g18x10.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g116x20.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g1s8x10.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g1s16x20.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g0s8x10.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g0s8x20.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g0s16x10.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g0s16x20.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g0s32x20.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g0s16x40.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/g0s32x40.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/xteldigit.pcf.gz
-/usr/X11R6/lib/X11/fonts/xtel/fonts.dir
-/usr/X11R6/lib/X11/fonts/xtel/fonts.scale
+%{_bindir}*
+%{_libdir}/X11/app-defaults/XTelm
+%{_libdir}/X11/app-defaults/XTelm-msg
+%{_libdir}/X11/fonts/%{name}
+%dir %{_sysconfdir}/%{name}/
 %{_sysconfdir}/X11/fontpath.d/xtel:pri=50
+%{_libdir}/X11/%{name}
+%{_mandir}/man1/*
 
-%dir /usr/X11R6/lib/X11/fonts/xtel
-
-/usr/X11R6/lib/X11/xtel/modem.list
-/usr/X11R6/lib/X11/xtel/connect_iminitel
-
-%dir /usr/X11R6/lib/X11/xtel/
-
-%doc /usr/X11R6/man/man1/*
-%doc /usr/X11R6/lib/X11/doc/html/*
-
-%dir %{_sysconfdir}/xtel/
-%config(noreplace) %{_sysconfdir}/xtel/xtel.services
-%config(noreplace) %{_sysconfdir}/xtel/xtel.lignes
+%config(noreplace) %{_sysconfdir}/%{name}/xtel.services
+%config(noreplace) %{_sysconfdir}/%{name}/xtel.lignes
 %config(noreplace) %{_sysconfdir}/ppp/*iminitel
 %config(noreplace) %{_sysconfdir}/ppp/peers/iminitel
 %config(noreplace) %{_sysconfdir}/xinetd.d/*
 %config(noreplace) %{_sysconfdir}/X11/app-defaults/*
 
-%{_menudir}/*
+%{_datadir}/applications/mandriva-%{name}.desktop
+
