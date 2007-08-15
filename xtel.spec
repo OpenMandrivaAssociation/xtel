@@ -43,13 +43,13 @@ HyperTerminal Private Edition (3.0 ou 4.0) comme client Minitel Windows95/NT.
 %build
 perl -pi -e 's|(#define.*DEBUG_XTELD.*)|/* $1 */|' Config.tmpl
 # do not leak information in the config file
-imake -DREDHAT  -DUseInstalled -I/usr/share/X11/config
+imake -DREDHAT  -DUseInstalled -I/usr/share/X11/config LIBDIR=%{_libdir}
 
-make Xtel
+make Xtel LIBDIR=%{_libdir}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%makeinstall_std
+%makeinstall_std LIBDIR=%{_libdir}
 make install.man DESTDIR=$RPM_BUILD_ROOT
 
 chmod 755 $RPM_BUILD_ROOT%{_bindir}/mdmdetect
@@ -104,13 +104,17 @@ Categories=Motif;System;TerminalEmulator;
 EOF
 
 # fix symlinks
-mv $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults.bak
+rm -rf $RPM_BUILD_ROOT%{_libdir}/app-defaults
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults
-cp -Rf $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults.bak/* $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults
-rm -f $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults.bak
+ln -s %{_sysconfdir}/X11/app-defaults/XTelm $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults/XTelm
+ln -s %{_sysconfdir}/X11/app-defaults/XTelm-msg $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults/XTelm-msg
+
+# move fonts to correct location
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/fonts
+mv $RPM_BUILD_ROOT%{_libdir}/fonts/%{name} $RPM_BUILD_ROOT%{_datadir}/fonts
 
 mkdir -p %{buildroot}%_sysconfdir/X11/fontpath.d/
-ln -s ../../..%{_libdir}/X11/fonts/xtel \
+ln -s ../../..%{_datadir}/fonts/xtel \
     %{buildroot}%_sysconfdir/X11/fontpath.d/xtel:pri=50
 
 %clean
@@ -138,10 +142,10 @@ service xinetd restart
 %{_bindir}*
 %{_libdir}/X11/app-defaults/XTelm
 %{_libdir}/X11/app-defaults/XTelm-msg
-%{_libdir}/X11/fonts/%{name}
+%{_datadir}/fonts/%{name}
 %dir %{_sysconfdir}/%{name}/
 %{_sysconfdir}/X11/fontpath.d/xtel:pri=50
-%{_libdir}/X11/%{name}
+%{_libdir}/%{name}
 %{_mandir}/man1/*
 
 %config(noreplace) %{_sysconfdir}/%{name}/xtel.services
