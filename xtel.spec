@@ -15,7 +15,7 @@ Patch2: xtel-3.3.0-debian_a2ps.patch
 Patch3: xtel-3.3.0-debian_motif.patch
 License: GPLv2+
 Group: Networking/Other
-Buildrequires: XFree86-devel 
+Buildrequires: X11-devel 
 Buildrequires: jpeg-devel
 Buildrequires: gccmakedep
 BuildRequires: imake
@@ -94,7 +94,7 @@ cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop <<EOF
 Name=Xtel
 Comment=Minitel emulation
 Exec=%{_bindir}/%{name} 
-Icon=terminals_section.png
+Icon=terminals_section
 Terminal=false
 Type=Application
 StartupNotify=true
