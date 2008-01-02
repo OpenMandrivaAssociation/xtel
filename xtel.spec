@@ -23,6 +23,7 @@ BuildRequires: lesstif-devel
 BuildRequires: x11-data-bitmaps
 BuildRequires: mkfontdir
 BuildRequires: bdftopcf
+BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
 URL: http://pficheux.free.fr/xtel/
 Requires: xinetd
 
