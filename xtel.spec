@@ -128,11 +128,15 @@ if [ "`grep xtel /etc/services`" = "" ]; then
 fi
 
 service xinetd restart
+%if %mdkversion < 200900
 %{update_menus}
+%endif
  
 %postun
 service xinetd restart
+%if %mdkversion < 200900
 %{clean_menus}  
+%endif
 
 %files
 %defattr(-,root,root)
