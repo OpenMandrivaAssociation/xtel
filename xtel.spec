@@ -16,6 +16,7 @@ Patch3: xtel-3.3.0-debian_motif.patch
 License: GPLv2+
 Group: Networking/Other
 Buildrequires: X11-devel 
+Buildrequires: libxp-devel
 Buildrequires: jpeg-devel
 Buildrequires: gccmakedep
 BuildRequires: imake
