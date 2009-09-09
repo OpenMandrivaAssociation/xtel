@@ -1,6 +1,6 @@
 %define name	xtel
 %define version	3.3.0
-%define release	%mkrel 14
+%define release	%mkrel 15
 
 Summary: Emulateur Minitel
 Name: %{name}
