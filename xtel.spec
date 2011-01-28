@@ -1,6 +1,6 @@
 %define name	xtel
 %define version	3.3.0
-%define release	%mkrel 16
+%define release	%mkrel 17
 
 Summary: Emulateur Minitel
 Name: %{name}
@@ -15,13 +15,16 @@ Patch2: xtel-3.3.0-debian_a2ps.patch
 Patch3: xtel-3.3.0-debian_motif.patch
 License: GPLv2+
 Group: Networking/Other
-Buildrequires: X11-devel 
-Buildrequires: libxp-devel
-Buildrequires: jpeg-devel
-Buildrequires: gccmakedep
-BuildRequires: imake
+BuildRequires: libx11-devel
 BuildRequires: lesstif-devel
+BuildRequires: libxt-devel
+BuildRequires: libxmu-devel
+BuildRequires: libxaw-devel
+BuildRequires: libxp-devel
+Buildrequires: jpeg-devel
 BuildRequires: x11-data-bitmaps
+BuildRequires: imake
+BuildRequires: gccmakedep
 BuildRequires: mkfontdir
 BuildRequires: bdftopcf
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
@@ -41,12 +44,13 @@ HyperTerminal Private Edition (3.0 ou 4.0) comme client Minitel Windows95/NT.
 %patch1 -p1 -b .symlink
 %patch2 -p1 -b .a2ps
 %patch3 -p1 -b .motif
+
 %build
 perl -pi -e 's|(#define.*DEBUG_XTELD.*)|/* $1 */|' Config.tmpl
 # do not leak information in the config file
 imake -DREDHAT  -DUseInstalled -I/usr/share/X11/config LIBDIR=%{_libdir}
 
-make Xtel LIBDIR=%{_libdir}
+make Xtel LIBDIR=%{_libdir} CXXOPTIONS="%optflags" EXTRA_LDOPTIONS="%ldflags"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -109,10 +113,6 @@ mkdir -p $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults
 ln -s %{_sysconfdir}/X11/app-defaults/XTelm $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults/XTelm
 ln -s %{_sysconfdir}/X11/app-defaults/XTelm-msg $RPM_BUILD_ROOT%{_libdir}/X11/app-defaults/XTelm-msg
 
-# move fonts to correct location
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/fonts
-mv $RPM_BUILD_ROOT%{_libdir}/fonts/%{name} $RPM_BUILD_ROOT%{_datadir}/fonts
-
 mkdir -p %{buildroot}%_sysconfdir/X11/fontpath.d/
 ln -s ../../..%{_datadir}/fonts/xtel \
     %{buildroot}%_sysconfdir/X11/fontpath.d/xtel:pri=50
@@ -146,7 +146,7 @@ service xinetd restart
 %{_bindir}*
 %{_libdir}/X11/app-defaults/XTelm
 %{_libdir}/X11/app-defaults/XTelm-msg
-%{_datadir}/fonts/%{name}
+%{_datadir}/fonts/*
 %dir %{_sysconfdir}/%{name}/
 %{_sysconfdir}/X11/fontpath.d/xtel:pri=50
 %{_libdir}/%{name}
