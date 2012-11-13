@@ -1,0 +1,22 @@
+--- xtel-3.3.0/Imakefile        2001-02-12 08:33:01.000000000 -0800
++++ xtel-3.3.0/Imakefile.new    2007-08-14 15:11:32.000000000 -0700
+@@ -10,6 +10,7 @@ XCOMM
+ #define PassDependFlags 'DEPENDFLAGS=$(DEPENDFLAGS)'
+ 
+ #include "Config.tmpl"
++#include "Motif.tmpl"
+ 
+ BITMAPSDIR= bitmaps
+ PIXMAPSDIR= pixmaps
+
+--- xtel-3.3.0/Config.tmpl	2007-08-14 15:28:57.000000000 -0700
++++ xtel-3.3.0/Config.tmpl.new	2007-08-14 15:29:02.000000000 -0700
+@@ -17,7 +17,7 @@
+ #define INSTALLDEMON
+ 
+ /* Pour générer avec OSF-Motif */
+-/*#define MOTIF*/
++#define MOTIF
+ 
+ /* Pour ne pas utiliser TERMIO */
+ /*#define NO_TERMIO*/

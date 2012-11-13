@@ -1,0 +1,90 @@
+--- xtel-3.3.0/iminitel/Imakefile.fhs	2001-02-11 01:15:50.000000000 +0100
++++ xtel-3.3.0/iminitel/Imakefile	2002-06-13 16:44:51.000000000 +0200
+@@ -8,12 +8,10 @@
+ depend::
+ 
+ install::
+-InstallNonExecFile(iminitel, $(PPPDIR)/peers)
+-InstallNonExecFile(chat-iminitel, $(PPPDIR))
++InstallNonExecFile(iminitel,$(PPPDIR)/peers)
++InstallNonExecFile(chat-iminitel,$(PPPDIR))
+ InstallNamedProg(connect_iminitel.sh,connect_iminitel,$(LIBDIR)/xtel)
+ InstallNamedProg(install_iminitel.sh,install_iminitel,$(BINDIR))
+-InstallNamedProg(ip-up.iminitel,ip-up.iminitel, $(PPPDIR))
+-InstallNamedProg(ip-down.iminitel,ip-down.iminitel, $(PPPDIR))
++InstallNamedProg(ip-up.iminitel,ip-up.iminitel,$(PPPDIR))
++InstallNamedProg(ip-down.iminitel,ip-down.iminitel,$(PPPDIR))
+ 
+-install::
+-	install_iminitel
+--- xtel-3.3.0/Imakefile.fhs	2001-02-12 17:33:01.000000000 +0100
++++ xtel-3.3.0/Imakefile	2002-06-13 16:42:15.000000000 +0200
+@@ -98,12 +98,12 @@
+       XTELLIGNES = xtel.lignes
+     XTELSERVICES = xtel.services
+ 
+-CONF_DEFINES  = '-DFICHIER_DEFINITION_LIGNES="$(LIBDIR)/xtel/$(XTELLIGNES)"' \
+-		  '-DFICHIER_DEFINITION_SERVICES="$(LIBDIR)/xtel/$(XTELSERVICES)"'
++CONF_DEFINES  = '-DFICHIER_DEFINITION_LIGNES="$(ETCDIR)/xtel/$(XTELLIGNES)"' \
++		  '-DFICHIER_DEFINITION_SERVICES="$(ETCDIR)/xtel/$(XTELSERVICES)"'
+ 
+ TELE_DEFINES  = '-DXTERM_PATH="$(BINDIR)/xterm"'
+ 
+-XTELD_DEFINES = '-DFICHIER_LOG="$(LIBDIR)/xtel/xtel.log"' \
++XTELD_DEFINES = '-DFICHIER_LOG="$(ETCDIR)/xtel/xtel.log"' \
+ 		  '-DXTEL_LIBDIR="$(LIBDIR)/xtel"'
+ 
+ 
+@@ -123,8 +123,10 @@
+ #ifdef LinuxArchitecture
+ #ifdef REDHAT
+ DIAL_DEFINES = '-DFICHIER_LCK="/var/lock/LCK..%s"' 
++ETCDIR=/etc
+ #else
+-DIAL_DEFINES = '-DFICHIER_LCK="/usr/spool/uucp/LCK..%s"' 
++DIAL_DEFINES = '-DFICHIER_LCK="/usr/spool/uucp/LCK..%s"'
++ETCDIR=$(LIBDIR)
+ #endif /* REDHAT */
+ #else
+ DIAL_DEFINES = '-DFICHIER_LCK="/usr/spool/locks/LCK..%s"' 
+@@ -241,19 +243,19 @@
+ InstallManPage(xteld,$(MANDIR))
+ 
+ #ifdef INSTALLDEMON
+-InstallProgram(xteld, $(BINDIR))
+-InstallProgramWithFlags(mdmdetect, $(BINDIR), $(INSTUIDFLAGS))
++InstallProgram(xteld,$(BINDIR))
++InstallProgramWithFlags(mdmdetect,$(BINDIR), $(INSTUIDFLAGS))
+ InstallNamedProg(make_xtel_lignes.sh,make_xtel_lignes,$(BINDIR))
+ 
+ install::
+-	@if [ -r $(LIBDIR)/xtel/$(XTELLIGNES) ]; then \
+-	cp $(LIBDIR)/xtel/$(XTELLIGNES) $(LIBDIR)/xtel/$(XTELLIGNES).old; fi
+-	@if [ -r $(LIBDIR)/xtel/$(XTELSERVICES) ]; then \
+-	cp $(LIBDIR)/xtel/$(XTELSERVICES) $(LIBDIR)/xtel/$(XTELSERVICES).old; fi
+-
+-InstallNonExecFile($(XTELLIGNES), $(LIBDIR)/xtel)
+-InstallNonExecFile($(XTELSERVICES), $(LIBDIR)/xtel)
+-InstallNonExecFile(modem.list, $(LIBDIR)/xtel)
++	@if [ -r $(DESTDIR)$(ETCDIR)/xtel/$(XTELLIGNES) ]; then \
++	cp $(DESTDIR)$(ETCDIR)/xtel/$(XTELLIGNES) $(DESTDIR)$(ETCDIR)/xtel/$(XTELLIGNES).old; fi
++	@if [ -r $(DESTDIR)$(ETCDIR)/xtel/$(XTELSERVICES) ]; then \
++	cp $(DESTDIR)$(ETCDIR)/xtel/$(XTELSERVICES) $(DESTDIR)$(ETCDIR)/xtel/$(XTELSERVICES).old; fi
++
++InstallNonExecFile($(XTELLIGNES),$(ETCDIR)/xtel)
++InstallNonExecFile($(XTELSERVICES),$(ETCDIR)/xtel)
++InstallNonExecFile(modem.list,$(LIBDIR)/xtel)
+ #endif
+ 
+ SpecialObjectRule(teleinfo.o, teleinfo.c, $(TELE_DEFINES))
+--- xtel-3.3.0/make_xtel_lignes.sh.fhs	2001-02-11 20:28:00.000000000 +0100
++++ xtel-3.3.0/make_xtel_lignes.sh	2002-06-13 16:42:15.000000000 +0200
+@@ -3,7 +3,7 @@
+ 
+ # Détection des modems
+ 
+-XTEL_LIGNES="/usr/X11R6/lib/X11/xtel/xtel.lignes"
++XTEL_LIGNES="/etc/xtel/xtel.lignes"
+ MDMDETECT="/usr/X11R6/bin/mdmdetect"
+ 
+ KERNELV=`uname -r | tr -d "." | cut -c1,2`
