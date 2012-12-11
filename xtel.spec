@@ -161,3 +161,115 @@ service xinetd restart
 
 %{_datadir}/applications/mandriva-%{name}.desktop
 
+
+
+%changelog
+* Fri Jan 28 2011 Funda Wang <fwang@mandriva.org> 3.3.0-17mdv2011.0
++ Revision: 633645
+- simplify BR
+
+* Wed Dec 08 2010 Oden Eriksson <oeriksson@mandriva.com> 3.3.0-16mdv2011.0
++ Revision: 615739
+- the mass rebuild of 2010.1 packages
+
+* Wed Sep 09 2009 Thierry Vignaud <tv@mandriva.org> 3.3.0-15mdv2010.0
++ Revision: 435376
+- BuildRequires libxp-devel
+- rebuild
+
+* Mon Aug 04 2008 Thierry Vignaud <tv@mandriva.org> 3.3.0-14mdv2009.0
++ Revision: 262737
+- rebuild
+
+* Thu Jul 31 2008 Thierry Vignaud <tv@mandriva.org> 3.3.0-13mdv2009.0
++ Revision: 257818
+- rebuild
+
+  + Pixel <pixel@mandriva.com>
+    - rpm filetriggers deprecates update_menus/update_scrollkeeper/update_mime_database/update_icon_cache/update_desktop_database/post_install_gconf_schemas
+
+* Thu Jan 03 2008 Olivier Blin <oblin@mandriva.com> 3.3.0-11mdv2008.1
++ Revision: 140994
+- restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+    - buildrequires X11-devel instead of XFree86-devel
+    - kill desktop-file-validate's 'warning: key "Encoding" in group "Desktop Entry" is deprecated'
+
+* Wed Aug 15 2007 Adam Williamson <awilliamson@mandriva.org> 3.3.0-11mdv2008.0
++ Revision: 63561
+- okay, let's fix this up for x86-64 better, fix the symlinks better, and put the fonts in the right place
+- bump for stupid bs bug
+- oops, fix app-defaults stuff for x86-64
+- buildrequires mkfontdir and bdftopcf
+- buildrequires x11-data-bitmaps
+- rebuild for 2008
+- clean file list
+- XDG menu
+- use modern X layout (no more X11R6)
+- new location for imake templates
+- fix buildrequires
+- patch3 (Debian): build against lesstif
+- patch2 (Debian): correct calls to a2ps
+- patch1 (Debian): fix symlink security issue
+- use Fedora license policy (GPLv2+)
+- spec clean
+
+  + Ademar de Souza Reis Jr <ademar@mandriva.com.br>
+    - fontpath.d conversion (#31756)
+    - Import xtel
+
+
+
+* Sat Mar 12 2005 Michael Scherer <misc@mandrake.org> 3.3.0-8mdk
+- disable debug output in the log, thanks to Gerard Quequet
+
+* Mon Feb 21 2005 Franck Villaume <fvill@freesurf.fr> 3.3.0-7mdk
+- add missing files
+
+* Wed Oct 20 2004 Michael Scherer <misc@mandrake.org> 3.3.0-6mdk
+- Rebuild
+- add missing file, to correct the size of the screen
+
+* Tue Dec 30 2003 Michael Scherer <misc@mandrake.org> 3.3.0-5mdk 
+- fix compilation
+- remove some [DIRM]
+- use service xinetd restart instead of sending SIGHUP
+
+* Wed Jul 23 2003 Lenny Cartier <lenny@mandrakesoft.com> 3.3.0-4mdk
+- buildrequires from Michael Scherer
+
+* Tue May 06 2003 Lenny Cartier <lenny@mandrakesoft.com> 3.3.0-3mdk
+- buildrequires
+
+* Fri Jan 24 2003 Lenny Cartier <lenny@mandrakesoft.com> 3.3.0-2mdk
+- rebuild
+
+* Thu Jun 13 2002 Frederic Crozat <fcrozat@mandrakesoft.com> 3.3.0-1mdk
+- Release 3.3.0
+- Regenerate patch0
+
+* Sat Sep  1 2001 Frederic Crozat <fcrozat@mandrakesoft.com> 3.2.1-7mdk
+- Don't uninstall font when upgrading
+
+* Thu Aug 23 2001 Etienne Faure <etienne@mandrakesoft.com> 3.2.1-6mdk
+- rebuild
+
+* Wed Feb 21 2001 Lenny Cartier <lenny@mandrakesoft.com> 3.2.1-5mdk
+- rebuild
+
+* Tue Nov 07 2000 Lenny Cartier <lenny@mandrakesoft.com> 3.2.1-4mdk
+- added configuration examples and some documentation from 
+  Pierre Jarillon <jarillon@atlantic-line.fr>
+
+* Thu Sep 21 2000 Lenny Cartier <lenny@mandrakesoft.com> 3.2.1-3mdk
+- build release
+- menu
+
+* Thu May 04 2000 Lenny Cartier <lenny@mandrakesoft.com> 3.2.1-2mdk
+- fix group
+- spechelper cleanups
+
+* Fri Dec 31 1999 Frederic Lepied <flepied@mandrakesoft.com> 3.2.1-1mdk
+- first mandrake release
