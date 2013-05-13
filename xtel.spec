@@ -1,6 +1,6 @@
 %define name	xtel
 %define version	3.3.0
-%define release	%mkrel 17
+%define release 	18
 
 Summary: Emulateur Minitel
 Name: %{name}
@@ -27,7 +27,6 @@ BuildRequires: imake
 BuildRequires: gccmakedep
 BuildRequires: mkfontdir
 BuildRequires: bdftopcf
-BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
 URL: http://pficheux.free.fr/xtel/
 Requires: xinetd
 
