@@ -15,11 +15,11 @@ Patch2: xtel-3.3.0-debian_a2ps.patch
 Patch3: xtel-3.3.0-debian_motif.patch
 License: GPLv2+
 Group: Networking/Other
-BuildRequires: libx11-devel
+BuildRequires: pkgconfig(x11)
 BuildRequires: lesstif-devel
-BuildRequires: libxt-devel
-BuildRequires: libxmu-devel
-BuildRequires: libxaw-devel
+BuildRequires: pkgconfig(xt)
+BuildRequires: pkgconfig(xmu)
+BuildRequires: pkgconfig(xaw7)
 BuildRequires: libxp-devel
 Buildrequires: jpeg-devel
 BuildRequires: x11-data-bitmaps
