@@ -1,6 +1,6 @@
 %define name	xtel
 %define version	3.3.0
-%define release 	18
+%define release 	19
 
 Summary: Emulateur Minitel
 Name: %{name}
