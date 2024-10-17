@@ -27,7 +27,7 @@ BuildRequires: imake
 BuildRequires: gccmakedep
 BuildRequires: mkfontdir
 BuildRequires: bdftopcf
-URL: http://pficheux.free.fr/xtel/
+URL: https://pficheux.free.fr/xtel/
 Requires: xinetd
 
 %description
